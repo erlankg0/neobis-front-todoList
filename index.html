@@ -17,22 +17,44 @@
             <div class="toDo__content">
                 <div class="toDo__header">
                     <h1 class="toDo__title">What's up,
-                        <label for="toDo__header"></label><input id="toDo__header" type="text"/>
                     </h1>
+                    <input class="toDo__title-input" placeholder="a" type="text"/>
                 </div>
                 <form class="toDo__form form">
                     <div class="form__top">
-                        <label for="toDo__input"></label>
-                        <input name="text_form" id="toDo__input" required type="text" placeholder="e.g get a kebab">
+                        <h2 class="form__title">Create a todo</h2>
+                        <label for="toDo__input">What's on your todo list ?</label>
+                        <input name="text_form" id="toDo__input" required type="text" value="111111111"
+                               placeholder="e.g get a kebab">
                     </div>
                     <div class="form__down">
-                        <label for="person"></label>
-                        <input type="radio" id="person" required name="category"/>
-                        <label for="business"></label>
-                        <input type="radio" id="business" required name="category">
+                        <div class="form__category">
+                            <label for="person">Person</label>
+                            <input class="form__radio" type="radio" id="person" required name="category"/>
+                        </div>
+                        <div class="form__category">
+                            <label for="business">Business</label>
+                            <input class="form__radio" checked type="radio" id="business" required name="category">
+                        </div>
                     </div>
-                    <button type="submit">Add ToDo</button>
+                    <button class="btn" id="btn">Add ToDo</button>
                 </form>
+
+                <ul class="list" id="list">
+                    <li><p>TODO LIST</p></li>
+                    <li class="list__item">
+                        <div class="card">
+                            <div class="card__left">
+                                <input type="radio" class="card__radio">
+                                <input type="text" class="card__input">
+                            </div>
+                            <div class="card__right">
+                                <button class="card__btn purple">Edit</button>
+                                <button class="card__btn red">Delete</button>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>

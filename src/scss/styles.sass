@@ -4,6 +4,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Madimi+One&display=swap')
 $--background--color: #f8f8f8
 
+*
+  margin: 0
+  padding: 0
+  box-sizing: border-box
+
 html, body
   font-size: 10px
   font-family: 'Madimi', sans-serif
@@ -24,6 +29,7 @@ html, body
     max-width: 50rem
     width: 50%
     margin: 0 auto
+
   &__header
     display: flex
     gap: 1rem
@@ -33,14 +39,94 @@ html, body
     line-height: 3rem
     font-weight: bold
 
-  &__title > input
+  &__title-input
+    max-width: 40%
+    max-height: 3rem
+
+    align-self: center
+
     border: none
+
     font-size: 3rem
     font-weight: bold
     line-height: 3rem
+
     background-color: $--background--color
+
     cursor: text
 
-  &__form
+
+.form
+  display: grid
+  grid-template-columns: 1fr
+  gap: 2rem
+
+  &__top
     display: flex
     flex-direction: column
+    gap: 1rem
+
+  &__top > input
+    width: 100%
+    padding: .5rem
+    font-size: 1.6rem
+    font-weight: 400
+    border: #3a3af6
+
+  &__top > input:focus
+    border: #3a3af6 solid 1px
+    border-radius: .5rem
+
+  &__top > label
+    font-size: 1.4rem
+    font-weight: 300
+    color: black
+
+  &__title
+    text-transform: uppercase
+    font-size: 2rem
+
+
+  &__down
+    display: grid
+    grid-template-columns: repeat(2, 1fr)
+    column-gap: 2rem
+
+  &__category
+    align-items: center
+    background-color: #ffffff
+    border-radius: 1rem
+
+    display: flex
+    flex-direction: column-reverse
+    padding: 3rem
+    gap: 1rem
+
+  &__category > label
+    font-size: 2rem
+    font-weight: 300
+
+  &__category > input
+    width: 2.5rem
+    height: 2.5rem
+    cursor: pointer
+
+
+
+.btn
+  padding: .5rem
+  background-color: #3a3af6
+  color: $--background--color
+  font-size: 2rem
+  font-weight: 400
+
+  border-radius: 1rem
+  border: none
+
+#business:not(:checked) + label
+  color: green
+
+#person:not(:checked) + label
+  color: purple
+
+@import "list"
