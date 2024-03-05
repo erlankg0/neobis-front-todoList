@@ -34,12 +34,13 @@ var ToDo = /** @class */ (function () {
         };
         // фунция для получения всех сделалны или несделаных задач
         this.isFinish = function (id, done) {
-            _this._tasks = _this.tasks.map(function (task) {
+            _this._tasks = _this._tasks = _this.tasks.map(function (task) {
                 if (task.id == id) {
                     task.isFinish = done;
                 }
                 return task;
             });
+            _this.saveTasks();
         };
         // фунция для удаления задачи
         this.deleteTask = function (id) {
@@ -83,7 +84,7 @@ var loadingTasks = function () {
     ul.innerHTML = '';
     todo.tasks.forEach(function (task) {
         var li = document.createElement('li');
-        li.classList.add('toDo__item'); // Добавления класса
+        li.classList.add('list__item'); // Добавления класса
         // Создание div container card
         var cardDiv = document.createElement('div');
         cardDiv.classList.add('card');
@@ -103,7 +104,7 @@ var loadingTasks = function () {
         textInput.value = task.value;
         textInput.setAttribute('readonly', 'readonly');
         if (task.isFinish) {
-            textInput.classList.toggle('finished');
+            textInput.classList.add('finished');
         }
         // Добавление радио кнопки и текстового поля в левую часть карточки
         leftSide.appendChild(radioInput);

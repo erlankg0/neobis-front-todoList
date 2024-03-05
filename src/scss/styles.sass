@@ -71,7 +71,8 @@ html, body
     padding: .5rem
     font-size: 1.6rem
     font-weight: 400
-    border: #3a3af6
+    border: #f8f8f8 solid 1px
+    border-radius: .5rem
 
   &__top > input:focus
     border: #3a3af6 solid 1px
@@ -102,16 +103,25 @@ html, body
     padding: 3rem
     gap: 1rem
 
+
   &__category > label
     font-size: 2rem
     font-weight: 300
+    width: 2.5rem
+    height: 2.5rem
+    cursor: pointer
+    border-radius: 50%
+    padding: 1px
+    margin: 1px
 
   &__category > input
     width: 2.5rem
     height: 2.5rem
     cursor: pointer
+    display: none
 
-
+.form__radio
+  display: none
 
 .btn
   padding: .5rem
@@ -122,11 +132,53 @@ html, body
 
   border-radius: 1rem
   border: none
+  box-shadow: 0 1rem 2rem rgba(38, 38, 147, 0.53)
+  transition: .3s ease-in-out
+  cursor: pointer
 
-#business:not(:checked) + label
-  color: green
+  &:active
+    transform: translateY(2px)
 
-#person:not(:checked) + label
-  color: purple
+#business:checked, label[for=business]
+  background: #3a3af6
+  box-shadow: 0 0 5px #3a3af6
+
+
+#person:checked, label[for=person]
+  background: red
+  box-shadow: 0 0 5px red
+
+
+#business:not(checked), label[for=business]
+  background: white
+  box-shadow: 0 0 5px #3a3af6
+
+
+#person:not(checked), label[for=person]
+  background: white
+  box-shadow: 0 0 5px red
+
+
+/* Стилизация радиокнопок */
+input[type="radio"]
+  align-self: center
+  width: 16px
+  height: 16px
+  border: 1px solid #ccc
+  border-radius: 50%
+  appearance: none
+  -webkit-appearance: none
+  -moz-appearance: none
+  outline: none
+
+
+input[type="radio"]:checked
+  background: #3a3af6
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #3a3af6
+
+
+input[type="radio"]:focus
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #3a3af6
+
 
 @import "list"

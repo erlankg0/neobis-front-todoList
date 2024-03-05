@@ -53,12 +53,13 @@ class ToDo {
     }
     // фунция для получения всех сделалны или несделаных задач
     isFinish = (id: number, done: boolean): void => {
-        this._tasks = this.tasks.map((task) => {
+        this._tasks = this._tasks = this.tasks.map((task) => {
             if (task.id == id) {
                 task.isFinish = done;
             }
             return task
         })
+        this.saveTasks();
     }
     // фунция для удаления задачи
     deleteTask = (id: number) => {
@@ -94,7 +95,7 @@ const loadingTasks = () => {
     ul.innerHTML = '';
     todo.tasks.forEach((task) => {
         const li = document.createElement('li');
-        li.classList.add('toDo__item'); // Добавления класса
+        li.classList.add('list__item'); // Добавления класса
 
         // Создание div container card
         const cardDiv = document.createElement('div');
@@ -118,7 +119,7 @@ const loadingTasks = () => {
         textInput.value = task.value;
         textInput.setAttribute('readonly', 'readonly')
         if(task.isFinish){
-            textInput.classList.toggle('finished');
+            textInput.classList.add('finished');
         }
         // Добавление радио кнопки и текстового поля в левую часть карточки
         leftSide.appendChild(radioInput);
