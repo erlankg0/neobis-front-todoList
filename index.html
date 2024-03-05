@@ -24,7 +24,7 @@
                     <div class="form__top">
                         <h2 class="form__title">Create a todo</h2>
                         <label for="toDo__input">What's on your todo list ?</label>
-                        <input name="text_form" id="toDo__input" required type="text" value="111111111"
+                        <input name="text_form" id="toDo__input" required type="text"
                                placeholder="e.g get a kebab">
                     </div>
                     <div class="form__down">
@@ -34,27 +34,29 @@
                         </div>
                         <div class="form__category">
                             <label for="business">Business</label>
-                            <input class="form__radio" checked type="radio" id="business" required name="category">
+                            <input class="form__radio" type="radio" id="business" required name="category">
                         </div>
                     </div>
-                    <button class="btn" id="btn">Add ToDo</button>
+                    <button class="btn" type="submit" id="btn">Add ToDo</button>
                 </form>
 
-                <ul class="list" id="list">
-                    <li><p>TODO LIST</p></li>
-                    <li class="list__item">
-                        <div class="card">
-                            <div class="card__left">
-                                <input type="radio" class="card__radio">
-                                <input type="text" class="card__input">
+                <div class="tasks">
+                    <h3 class="tasks__title">ToDo List</h3>
+                    <ul class="list" id="list">
+                        <li class="list__item">
+                            <div class="card">
+                                <div class="card__left">
+                                    <input type="radio" class="card__radio">
+                                    <input  type="text" class="card__input" readonly>
+                                </div>
+                                <div class="card__right">
+                                    <button class="card__btn purple">Edit</button>
+                                    <button class="card__btn red">Delete</button>
+                                </div>
                             </div>
-                            <div class="card__right">
-                                <button class="card__btn purple">Edit</button>
-                                <button class="card__btn red">Delete</button>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>

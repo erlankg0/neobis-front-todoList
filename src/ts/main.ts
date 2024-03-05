@@ -4,13 +4,11 @@ enum Category {
     Business,
 }
 
+// interface данных
 interface Task {
     category: Category,
-    title: string,
     value: string,
     isFinish: boolean,
-    createdAt: Date,
-    updatedAt: Date,
     id: number
 }
 
@@ -36,6 +34,7 @@ class ToDo {
     private saveTasks = (): void => {
         // Сохранения в localStorage
         localStorage.setItem('tasks', JSON.stringify(this._tasks));
+        this.loadTask();
     }
 
     // функция для получения всех задач @GET
@@ -53,15 +52,29 @@ class ToDo {
         return this._tasks.filter((task) => task.category == category); // фильтрация задач по категория
     }
     // фунция для получения всех сделалны или несделаных задач
-    isFinish = (done: boolean): Task[] => {
-        return this._tasks.filter((task) => task.isFinish == done) // фильтрация по категория сделанных задач
+    isFinish = (id: number, done: boolean): void => {
+        this._tasks = this.tasks.map((task) => {
+            if (task.id == id) {
+                task.isFinish = done;
+            }
+            return task
+        })
     }
     // фунция для удаления задачи
     deleteTask = (id: number) => {
-        this._tasks.filter((task) => task.id === id)
+        this._tasks = this._tasks.filter((task): boolean => task.id !== id)
         this.saveTasks(); // сохраняем tasks после удаления
     }
-
+    // фунция для изменения измени задачи
+    editTask = (id: number, title: string): void => {
+        this._tasks = this.tasks.map((task) => {
+            if (task.id == id) {
+                task.value = title;
+            }
+            return task
+        })
+        this.saveTasks(); // сохраняем tasks после изменения
+    }
     clear = () => {
         this._tasks = []; // чистка localstorage
         this.saveTasks();
@@ -74,6 +87,7 @@ class ToDo {
 const todo = new ToDo(); // создание экмепляра
 localStorage.setItem('tasks', JSON.stringify(todo.tasks));
 
+
 // фунция для загрузки задач
 const loadingTasks = () => {
     const ul = document.getElementById('list');
@@ -85,6 +99,7 @@ const loadingTasks = () => {
         // Создание div container card
         const cardDiv = document.createElement('div');
         cardDiv.classList.add('card');
+        cardDiv.setAttribute('id', `${task.id}`)
 
         // Создание левой части card
         const leftSide = document.createElement('div');
@@ -101,7 +116,10 @@ const loadingTasks = () => {
         textInput.type = 'text';
         textInput.classList.add('card__input');
         textInput.value = task.value;
-
+        textInput.setAttribute('readonly', 'readonly')
+        if(task.isFinish){
+            textInput.classList.toggle('finished');
+        }
         // Добавление радио кнопки и текстового поля в левую часть карточки
         leftSide.appendChild(radioInput);
         leftSide.appendChild(textInput);
@@ -131,7 +149,66 @@ const loadingTasks = () => {
         ul.appendChild(li);
         console.log('task')
     })
+    deleteTask(); // фунция которая добавляет event для каждого btn *red*
+    editTask();  // фунция которая добавляет event для каждого btn *purple*
+    isFinish(); // фунция которая добавляет event для каждого radio
 }
+// фунция для удаления зачад
+const deleteTask = (): void => {
+    const tasksItems = document.querySelectorAll('.card');
+    tasksItems.forEach((task): void => {
+        const IdCard = task.getAttribute('id');
+        const eventTask = task.querySelector('.card__right').querySelector('.red');
+        eventTask.addEventListener('click', () => {
+            todo.deleteTask(+IdCard);
+            loadingTasks(); // перегружаем список
+        })
+    })
+}
+
+// фукция для редактирования имени задачи
+const editTask = (): void => {
+    const tasksItems = document.querySelectorAll('.card');
+    tasksItems.forEach((task): void => {
+        const IdCard: string = task.getAttribute('id');
+        const eventTask = task.querySelector('.card__right').querySelector('.purple');
+        eventTask.addEventListener('click', () => {
+            const input = task.querySelector('.card__left').querySelector('.card__input') as HTMLInputElement;
+            input.removeAttribute('readonly');
+            input.addEventListener('focus', () => {
+                input.classList.toggle('focus');
+            });
+            input.addEventListener('blur', (event) => {
+                input.setAttribute('readonly', 'readonly');
+                todo.editTask(+IdCard, input.value);
+                loadingTasks();
+            })
+        })
+
+
+    })
+}
+
+// фунция для изменения задачи на выполенено
+const isFinish = () => {
+    const tasksItems = document.querySelectorAll('.card');
+    tasksItems.forEach((task) => {
+        const IdCard: string = task.getAttribute('id');
+        const radioEvent = task.querySelector('.card__left').querySelector('.card__radio') as HTMLInputElement;
+        radioEvent.addEventListener('change', () => {
+            const input = task.querySelector('.card__left').querySelector('.card__input');
+            if (radioEvent.checked) {
+                input.classList.add('finished')
+                todo.isFinish(+IdCard, radioEvent.checked);
+            }
+            input.classList.remove('finished');
+            todo.isFinish(+IdCard, radioEvent.checked);
+            loadingTasks();
+        })
+
+    })
+}
+// загружаем все зачачи когда будет useEffect
 document.addEventListener("DOMContentLoaded", () => {
     console.log(todo.tasks);
     loadingTasks(); //загрузка все задач
@@ -139,41 +216,37 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 // btn проверяем btn
-const onSubmitBtn = (event) => {
-    event.preventDefault(); // блокировка обновления сайта
-
-    const input = document.getElementById('toDo__input');
-    console.log(input);
-    loadingTasks(); // загрузка все задач
-
-}
-
 const btn = document.getElementById('btn')
-
+// простой валидатор формы
+const validationForm = (input: string, checked: boolean): boolean => {
+    return input.length > 1 && checked;
+}
+// по click btn добавляем зачаду
 btn.addEventListener('click', (event) => {
     event.preventDefault();
 
     const input = document.getElementById('toDo__input') as HTMLInputElement; // type input
     const radios = document.getElementsByName('category') as NodeListOf<HTMLInputElement>
+    let checked;
 
-    console.log(input.value);
     radios.forEach((radio) => {
         if (radio.checked) {
-            console.log(radio.id)
+            checked = radio.id;
         }
     })
+    console.log(validationForm(input.value, checked));
+    if (validationForm(input.value, checked)) {
 
-    todo.createTasks({
-        title: input.value,
-        value: input.value,
-        category: Category.Business,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        id: todo.tasks.length + 1,
-        isFinish: false
-    })
-    console.log(todo.tasks)
+        todo.createTasks({
+            value: input.value,
+            category: checked,
+            id: todo.tasks.length + 1,
+            isFinish: false
+        })
+
+        input.value = '';
+        radios.forEach((radio) => radio.checked = false);
+    }
     loadingTasks(); //загрузка все задач
 })
 
-todo.clear();

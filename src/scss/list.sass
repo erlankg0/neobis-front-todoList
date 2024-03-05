@@ -1,6 +1,16 @@
-.list
+.tasks
   display: flex
   flex-direction: column
+  gap: 2rem
+
+  &__title
+    font-size: 3rem
+    font-weight: bold
+    color: blue
+
+.list
+  display: flex
+  flex-direction: column-reverse
   gap: 2rem
 
   list-style: none
@@ -21,9 +31,11 @@
   gap: 1rem
   max-width: 100%
   transition: .3s ease-in-out
+  border-radius: 1rem
 
   &:hover
     transform: scale(1.1)
+    border: solid blue 1px
 
   &__right, &__left
     align-self: center
@@ -67,3 +79,9 @@
   background-color: red
   border-radius: 1rem
   border: none
+
+.focus
+  border: green solid 1px
+
+.finished
+  text-decoration: line-through
