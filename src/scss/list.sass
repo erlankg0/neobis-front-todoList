@@ -29,19 +29,18 @@
     padding: .5rem 1rem
     background-color: #ffffff
     border-radius: 1rem
+    transition: .3s ease-in-out
+
+  &__item:hover
+    transform: scale(1.1)
 
 .card
   display: grid
   grid-template-columns: repeat(2, 1fr)
   gap: 1rem
   max-width: 100%
-  transition: .3s ease-in-out
   border-radius: 1rem
   padding: .5rem 1rem
-
-  &:hover
-    transform: scale(1.1)
-    border: solid blue 1px
 
   &__right, &__left
     align-self: center
@@ -97,3 +96,15 @@
 
 .finished
   text-decoration: line-through
+
+
+@media (max-width: 425px), (max-width: 375px), (max-width: 320px)
+  .card
+    display: grid
+    grid-template-columns: 1fr
+
+    &__right
+      justify-self: auto
+
+      display: grid
+      gap: 1rem

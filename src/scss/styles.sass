@@ -26,8 +26,9 @@ html, body
     display: flex
     flex-direction: column
     gap: 1rem
-    max-width: 50rem
-    width: 50%
+    max-width: 70rem
+    width: 100%
+    min-width: 30rem
     margin: 0 auto
 
   &__header
@@ -120,8 +121,6 @@ html, body
     cursor: pointer
     display: none
 
-.form__radio
-  display: none
 
 .btn
   padding: .5rem
@@ -142,21 +141,25 @@ html, body
 #business:checked, label[for=business]
   background: #3a3af6
   box-shadow: 0 0 5px #3a3af6
+  transition: .4s ease-in-out
 
 
 #person:checked, label[for=person]
   background: red
   box-shadow: 0 0 5px red
+  transition: .4s ease-in-out
 
 
 #business:not(checked), label[for=business]
   background: white
   box-shadow: 0 0 5px #3a3af6
+  transition: .4s ease-in-out
 
 
 #person:not(checked), label[for=person]
   background: white
   box-shadow: 0 0 5px red
+  transition: .4s ease-in-out
 
 
 /* Стилизация радиокнопок */
@@ -170,11 +173,27 @@ input[type="radio"]
   -webkit-appearance: none
   -moz-appearance: none
   outline: none
+  transition: .4s ease-in-out
 
 
 input[type="radio"]:checked
-  background: #3a3af6
-  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #3a3af6
+  background: #cccccc
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #cccccc
+
+.person
+  background: red !important
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px red !important
+
+.personBox
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px red !important
+
+
+.business
+  background: #3a3af6 !important
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #3a3af6 !important
+
+.businessBox
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #3a3af6 !important
 
 
 input[type="radio"]:focus

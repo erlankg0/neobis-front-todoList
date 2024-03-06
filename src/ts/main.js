@@ -28,10 +28,6 @@ var ToDo = /** @class */ (function () {
             _this._tasks.push(task);
             _this.saveTasks(); // сохранем задачу
         };
-        // фунция для получения все задач по категория
-        this.getByCategoryTask = function (category) {
-            return _this._tasks.filter(function (task) { return task.category == category; }); // фильтрация задач по категория
-        };
         // фунция для получения всех сделалны или несделаных задач
         this.isFinish = function (id, done) {
             _this._tasks = _this._tasks = _this.tasks.map(function (task) {
@@ -57,10 +53,6 @@ var ToDo = /** @class */ (function () {
             });
             _this.saveTasks(); // сохраняем tasks после изменения
         };
-        this.clear = function () {
-            _this._tasks = []; // чистка localstorage
-            _this.saveTasks();
-        };
         // Загрузка данных из localStorage при создании экземпляра ToDo
         this.loadTask();
     }
@@ -78,6 +70,15 @@ var ToDo = /** @class */ (function () {
 // DOMContentLoaded === useEffect
 var todo = new ToDo(); // создание экмепляра
 localStorage.setItem('tasks', JSON.stringify(todo.tasks));
+// event Listener для input[type='radio']
+var personRadio = document.getElementById('person');
+personRadio.addEventListener('change', function () {
+    addDeleteClass('person_label', 'person');
+});
+var businessRadio = document.getElementById('business');
+businessRadio.addEventListener('change', function () {
+    addDeleteClass('business__label', 'business');
+});
 // фунция для загрузки задач
 var loadingTasks = function () {
     var ul = document.getElementById('list');
@@ -97,6 +98,19 @@ var loadingTasks = function () {
         radioInput.type = 'radio';
         radioInput.classList.add('card__radio');
         radioInput.checked = task.isFinish;
+        if ("".concat(task.category) == 'person') {
+            radioInput.classList.add('personBox');
+            if (task.isFinish) {
+                radioInput.classList.add('person');
+            }
+        }
+        else if ("".concat(task.category) == 'business') {
+            radioInput.classList.add('businessBox');
+            if (task.isFinish) {
+                radioInput.classList.add('business');
+            }
+        }
+        radioInput.setAttribute('category', "".concat(task.category));
         // Добавление текстового поля
         var textInput = document.createElement('input');
         textInput.type = 'text';
@@ -156,7 +170,7 @@ var editTask = function () {
             input.addEventListener('focus', function () {
                 input.classList.toggle('focus');
             });
-            input.addEventListener('blur', function (event) {
+            input.addEventListener('blur', function () {
                 input.setAttribute('readonly', 'readonly');
                 todo.editTask(+IdCard, input.value);
                 loadingTasks();
@@ -217,3 +231,22 @@ btn.addEventListener('click', function (event) {
     }
     loadingTasks(); //загрузка все задач
 });
+// фунция для кастомизации radio - label
+var handleRadioClick = function (selected) {
+    var personLabel = document.getElementById('person_label');
+    var businessLabel = document.getElementById('business__label');
+    if (selected == 'person') {
+        personLabel.classList.add('person');
+        businessLabel.classList.remove('business');
+    }
+    else if (selected == 'business') {
+        personLabel.classList.remove('person');
+        businessLabel.classList.add('business');
+    }
+};
+// фунция удаления добавления класса
+var addDeleteClass = function (labelID, className) {
+    var label = document.getElementById(labelID);
+    label.classList.toggle(className);
+    handleRadioClick(className);
+};

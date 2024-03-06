@@ -47,10 +47,6 @@ class ToDo {
         this._tasks.push(task);
         this.saveTasks(); // сохранем задачу
     }
-    // фунция для получения все задач по категория
-    getByCategoryTask = (category: Category): Task[] => {
-        return this._tasks.filter((task) => task.category == category); // фильтрация задач по категория
-    }
     // фунция для получения всех сделалны или несделаных задач
     isFinish = (id: number, done: boolean): void => {
         this._tasks = this._tasks = this.tasks.map((task) => {
@@ -76,10 +72,6 @@ class ToDo {
         })
         this.saveTasks(); // сохраняем tasks после изменения
     }
-    clear = () => {
-        this._tasks = []; // чистка localstorage
-        this.saveTasks();
-    }
 }
 
 // загрузка класс через event List
@@ -88,6 +80,20 @@ class ToDo {
 const todo = new ToDo(); // создание экмепляра
 localStorage.setItem('tasks', JSON.stringify(todo.tasks));
 
+
+// event Listener для input[type='radio']
+
+
+const personRadio = document.getElementById('person');
+
+personRadio.addEventListener('change', () => {
+    addDeleteClass('person_label', 'person');
+})
+
+const businessRadio = document.getElementById('business')
+businessRadio.addEventListener('change', () => {
+    addDeleteClass('business__label', 'business');
+})
 
 // фунция для загрузки задач
 const loadingTasks = () => {
@@ -111,6 +117,18 @@ const loadingTasks = () => {
         radioInput.type = 'radio';
         radioInput.classList.add('card__radio');
         radioInput.checked = task.isFinish;
+        if (`${task.category}` == 'person') {
+            radioInput.classList.add('personBox')
+            if (task.isFinish) {
+                radioInput.classList.add('person')
+            }
+        } else if (`${task.category}` == 'business') {
+            radioInput.classList.add('businessBox')
+            if (task.isFinish) {
+                radioInput.classList.add('business')
+            }
+        }
+        radioInput.setAttribute('category', `${task.category}`)
 
         // Добавление текстового поля
         const textInput = document.createElement('input');
@@ -118,7 +136,7 @@ const loadingTasks = () => {
         textInput.classList.add('card__input');
         textInput.value = task.value;
         textInput.setAttribute('readonly', 'readonly')
-        if(task.isFinish){
+        if (task.isFinish) {
             textInput.classList.add('finished');
         }
         // Добавление радио кнопки и текстового поля в левую часть карточки
@@ -179,7 +197,7 @@ const editTask = (): void => {
             input.addEventListener('focus', () => {
                 input.classList.toggle('focus');
             });
-            input.addEventListener('blur', (event) => {
+            input.addEventListener('blur', () => {
                 input.setAttribute('readonly', 'readonly');
                 todo.editTask(+IdCard, input.value);
                 loadingTasks();
@@ -250,4 +268,26 @@ btn.addEventListener('click', (event) => {
     }
     loadingTasks(); //загрузка все задач
 })
+
+
+// фунция для кастомизации radio - label
+const handleRadioClick = (selected: string) => {
+    const personLabel = document.getElementById('person_label');
+    const businessLabel = document.getElementById('business__label');
+
+    if (selected == 'person') {
+        personLabel.classList.add('person');
+        businessLabel.classList.remove('business');
+    } else if (selected == 'business') {
+        personLabel.classList.remove('person');
+        businessLabel.classList.add('business');
+    }
+
+}
+// фунция удаления добавления класса
+const addDeleteClass = (labelID: string, className: string) => {
+    const label = document.getElementById(labelID);
+    label.classList.toggle(className);
+    handleRadioClick(className);
+}
 
