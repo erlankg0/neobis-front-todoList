@@ -29,10 +29,10 @@ var ToDo = /** @class */ (function () {
             _this.saveTasks(); // сохранем задачу
         };
         // фунция для получения всех сделалны или несделаных задач
-        this.isFinish = function (id, done) {
+        this.isFinish = function (id) {
             _this._tasks = _this._tasks = _this.tasks.map(function (task) {
                 if (task.id == id) {
-                    task.isFinish = done;
+                    task.isFinish = !task.isFinish;
                 }
                 return task;
             });
@@ -66,6 +66,17 @@ var ToDo = /** @class */ (function () {
     });
     return ToDo;
 }());
+// Схема валидации input
+var validate = function (inputValue) {
+    // Удаляем пробелы в начале и конце
+    var trimmedValue = inputValue.trim();
+    // Проверяем, что значение не пусто
+    if (trimmedValue === "") {
+        alert("Пожалуйста, введите текст.");
+        return false;
+    }
+    return true;
+};
 // загрузка класс через event List
 // DOMContentLoaded === useEffect
 var todo = new ToDo(); // создание экмепляра
@@ -140,7 +151,6 @@ var loadingTasks = function () {
         cardDiv.appendChild(rightSide);
         li.appendChild(cardDiv);
         ul.appendChild(li);
-        console.log('task');
     });
     deleteTask(); // фунция которая добавляет event для каждого btn *red*
     editTask(); // фунция которая добавляет event для каждого btn *purple*
@@ -172,7 +182,9 @@ var editTask = function () {
             });
             input.addEventListener('blur', function () {
                 input.setAttribute('readonly', 'readonly');
-                todo.editTask(+IdCard, input.value);
+                if (validate(input.value)) {
+                    todo.editTask(+IdCard, input.value);
+                }
                 loadingTasks();
             });
         });
@@ -184,29 +196,27 @@ var isFinish = function () {
     tasksItems.forEach(function (task) {
         var IdCard = task.getAttribute('id');
         var radioEvent = task.querySelector('.card__left').querySelector('.card__radio');
-        radioEvent.addEventListener('change', function () {
+        radioEvent.addEventListener('click', function () {
+            console.log('cahnge');
             var input = task.querySelector('.card__left').querySelector('.card__input');
             if (radioEvent.checked) {
                 input.classList.add('finished');
-                todo.isFinish(+IdCard, radioEvent.checked);
+                todo.isFinish(+IdCard);
             }
-            input.classList.remove('finished');
-            todo.isFinish(+IdCard, radioEvent.checked);
+            else {
+                input.classList.remove('finished');
+                todo.isFinish(+IdCard);
+            }
             loadingTasks();
         });
     });
 };
 // загружаем все зачачи когда будет useEffect
 document.addEventListener("DOMContentLoaded", function () {
-    console.log(todo.tasks);
     loadingTasks(); //загрузка все задач
 });
 // btn проверяем btn
 var btn = document.getElementById('btn');
-// простой валидатор формы
-var validationForm = function (input, checked) {
-    return input.length > 1 && checked;
-};
 // по click btn добавляем зачаду
 btn.addEventListener('click', function (event) {
     event.preventDefault();
@@ -218,8 +228,7 @@ btn.addEventListener('click', function (event) {
             checked = radio.id;
         }
     });
-    console.log(validationForm(input.value, checked));
-    if (validationForm(input.value, checked)) {
+    if (validate(validate(input.value) && checked)) {
         todo.createTasks({
             value: input.value,
             category: checked,
@@ -228,8 +237,8 @@ btn.addEventListener('click', function (event) {
         });
         input.value = '';
         radios.forEach(function (radio) { return radio.checked = false; });
+        loadingTasks(); //загрузка все задач
     }
-    loadingTasks(); //загрузка все задач
 });
 // фунция для кастомизации radio - label
 var handleRadioClick = function (selected) {

@@ -48,10 +48,10 @@ class ToDo {
         this.saveTasks(); // сохранем задачу
     }
     // фунция для получения всех сделалны или несделаных задач
-    isFinish = (id: number, done: boolean): void => {
+    isFinish = (id: number): void => {
         this._tasks = this._tasks = this.tasks.map((task) => {
             if (task.id == id) {
-                task.isFinish = done;
+                task.isFinish = !task.isFinish;
             }
             return task
         })
@@ -73,6 +73,22 @@ class ToDo {
         this.saveTasks(); // сохраняем tasks после изменения
     }
 }
+
+// Схема валидации input
+
+
+const validate = (inputValue: string): boolean => {
+    // Удаляем пробелы в начале и конце
+    const trimmedValue = inputValue.trim();
+
+    // Проверяем, что значение не пусто
+    if (trimmedValue === "") {
+        alert("Пожалуйста, введите текст.");
+        return false;
+    }
+    return true;
+}
+
 
 // загрузка класс через event List
 // DOMContentLoaded === useEffect
@@ -166,7 +182,6 @@ const loadingTasks = () => {
 
         li.appendChild(cardDiv);
         ul.appendChild(li);
-        console.log('task')
     })
     deleteTask(); // фунция которая добавляет event для каждого btn *red*
     editTask();  // фунция которая добавляет event для каждого btn *purple*
@@ -199,7 +214,9 @@ const editTask = (): void => {
             });
             input.addEventListener('blur', () => {
                 input.setAttribute('readonly', 'readonly');
-                todo.editTask(+IdCard, input.value);
+                if (validate(input.value)) {
+                    todo.editTask(+IdCard, input.value);
+                }
                 loadingTasks();
             })
         })
@@ -214,32 +231,31 @@ const isFinish = () => {
     tasksItems.forEach((task) => {
         const IdCard: string = task.getAttribute('id');
         const radioEvent = task.querySelector('.card__left').querySelector('.card__radio') as HTMLInputElement;
-        radioEvent.addEventListener('change', () => {
+        radioEvent.addEventListener('click', () => {
+            console.log('cahnge')
             const input = task.querySelector('.card__left').querySelector('.card__input');
             if (radioEvent.checked) {
-                input.classList.add('finished')
-                todo.isFinish(+IdCard, radioEvent.checked);
+                input.classList.add('finished');
+                todo.isFinish(+IdCard);
+            } else {
+                input.classList.remove('finished');
+                todo.isFinish(+IdCard);
             }
-            input.classList.remove('finished');
-            todo.isFinish(+IdCard, radioEvent.checked);
             loadingTasks();
-        })
+        });
+
 
     })
 }
 // загружаем все зачачи когда будет useEffect
 document.addEventListener("DOMContentLoaded", () => {
-    console.log(todo.tasks);
     loadingTasks(); //загрузка все задач
 })
 
 
 // btn проверяем btn
 const btn = document.getElementById('btn')
-// простой валидатор формы
-const validationForm = (input: string, checked: boolean): boolean => {
-    return input.length > 1 && checked;
-}
+
 // по click btn добавляем зачаду
 btn.addEventListener('click', (event) => {
     event.preventDefault();
@@ -253,8 +269,7 @@ btn.addEventListener('click', (event) => {
             checked = radio.id;
         }
     })
-    console.log(validationForm(input.value, checked));
-    if (validationForm(input.value, checked)) {
+    if (validate(validate(input.value) && checked)) {
 
         todo.createTasks({
             value: input.value,
@@ -262,11 +277,10 @@ btn.addEventListener('click', (event) => {
             id: todo.tasks.length + 1,
             isFinish: false
         })
-
         input.value = '';
         radios.forEach((radio) => radio.checked = false);
+        loadingTasks(); //загрузка все задач
     }
-    loadingTasks(); //загрузка все задач
 })
 
 
