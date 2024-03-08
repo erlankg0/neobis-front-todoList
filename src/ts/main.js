@@ -66,7 +66,6 @@ var ToDo = /** @class */ (function () {
     });
     return ToDo;
 }());
-// Схема валидации input
 var validate = function (inputValue) {
     // Удаляем пробелы в начале и конце
     var trimmedValue = inputValue.trim();
@@ -77,17 +76,15 @@ var validate = function (inputValue) {
     }
     return true;
 };
-// загрузка класс через event List
-// DOMContentLoaded === useEffect
 var todo = new ToDo(); // создание экмепляра
 localStorage.setItem('tasks', JSON.stringify(todo.tasks));
 // event Listener для input[type='radio']
 var personRadio = document.getElementById('person');
-personRadio.addEventListener('change', function () {
+personRadio.addEventListener('click', function () {
     addDeleteClass('person_label', 'person');
 });
 var businessRadio = document.getElementById('business');
-businessRadio.addEventListener('change', function () {
+businessRadio.addEventListener('click', function () {
     addDeleteClass('business__label', 'business');
 });
 // фунция для загрузки задач
@@ -177,6 +174,7 @@ var editTask = function () {
         eventTask.addEventListener('click', function () {
             var input = task.querySelector('.card__left').querySelector('.card__input');
             input.removeAttribute('readonly');
+            input.focus();
             input.addEventListener('focus', function () {
                 input.classList.toggle('focus');
             });
@@ -217,7 +215,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 // btn проверяем btn
 var btn = document.getElementById('btn');
-// по click btn добавляем зачаду
+// on click btn добавляем зачаду
 btn.addEventListener('click', function (event) {
     event.preventDefault();
     var input = document.getElementById('toDo__input'); // type input
@@ -226,6 +224,14 @@ btn.addEventListener('click', function (event) {
     radios.forEach(function (radio) {
         if (radio.checked) {
             checked = radio.id;
+        }
+        if (radio.id == 'person') {
+            var personLabel = document.getElementById('person_label');
+            personLabel.classList.remove('person');
+        }
+        else {
+            var businessLabel = document.getElementById('business__label');
+            businessLabel.classList.remove('business');
         }
     });
     if (validate(validate(input.value) && checked)) {
@@ -236,11 +242,9 @@ btn.addEventListener('click', function (event) {
             isFinish: false
         });
         input.value = '';
-        radios.forEach(function (radio) { return radio.checked = false; });
         loadingTasks(); //загрузка все задач
     }
 });
-// фунция для кастомизации radio - label
 var handleRadioClick = function (selected) {
     var personLabel = document.getElementById('person_label');
     var businessLabel = document.getElementById('business__label');
@@ -255,7 +259,7 @@ var handleRadioClick = function (selected) {
 };
 // фунция удаления добавления класса
 var addDeleteClass = function (labelID, className) {
-    var label = document.getElementById(labelID);
-    label.classList.toggle(className);
+    if (labelID === void 0) { labelID = ''; }
+    if (className === void 0) { className = ''; }
     handleRadioClick(className);
 };

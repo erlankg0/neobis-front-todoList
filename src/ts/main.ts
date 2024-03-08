@@ -74,9 +74,6 @@ class ToDo {
     }
 }
 
-// Схема валидации input
-
-
 const validate = (inputValue: string): boolean => {
     // Удаляем пробелы в начале и конце
     const trimmedValue = inputValue.trim();
@@ -90,9 +87,6 @@ const validate = (inputValue: string): boolean => {
 }
 
 
-// загрузка класс через event List
-// DOMContentLoaded === useEffect
-
 const todo = new ToDo(); // создание экмепляра
 localStorage.setItem('tasks', JSON.stringify(todo.tasks));
 
@@ -102,12 +96,12 @@ localStorage.setItem('tasks', JSON.stringify(todo.tasks));
 
 const personRadio = document.getElementById('person');
 
-personRadio.addEventListener('change', () => {
+personRadio.addEventListener('click', () => {
     addDeleteClass('person_label', 'person');
 })
 
 const businessRadio = document.getElementById('business')
-businessRadio.addEventListener('change', () => {
+businessRadio.addEventListener('click', () => {
     addDeleteClass('business__label', 'business');
 })
 
@@ -209,6 +203,7 @@ const editTask = (): void => {
         eventTask.addEventListener('click', () => {
             const input = task.querySelector('.card__left').querySelector('.card__input') as HTMLInputElement;
             input.removeAttribute('readonly');
+            input.focus();
             input.addEventListener('focus', () => {
                 input.classList.toggle('focus');
             });
@@ -220,8 +215,6 @@ const editTask = (): void => {
                 loadingTasks();
             })
         })
-
-
     })
 }
 
@@ -256,7 +249,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // btn проверяем btn
 const btn = document.getElementById('btn')
 
-// по click btn добавляем зачаду
+// on click btn добавляем зачаду
 btn.addEventListener('click', (event) => {
     event.preventDefault();
 
@@ -268,6 +261,13 @@ btn.addEventListener('click', (event) => {
         if (radio.checked) {
             checked = radio.id;
         }
+        if (radio.id == 'person') {
+            const personLabel = document.getElementById('person_label');
+            personLabel.classList.remove('person')
+        } else {
+            const businessLabel = document.getElementById('business__label');
+            businessLabel.classList.remove('business');
+        }
     })
     if (validate(validate(input.value) && checked)) {
 
@@ -278,13 +278,10 @@ btn.addEventListener('click', (event) => {
             isFinish: false
         })
         input.value = '';
-        radios.forEach((radio) => radio.checked = false);
         loadingTasks(); //загрузка все задач
     }
 })
 
-
-// фунция для кастомизации radio - label
 const handleRadioClick = (selected: string) => {
     const personLabel = document.getElementById('person_label');
     const businessLabel = document.getElementById('business__label');
@@ -298,10 +295,9 @@ const handleRadioClick = (selected: string) => {
     }
 
 }
+
 // фунция удаления добавления класса
-const addDeleteClass = (labelID: string, className: string) => {
-    const label = document.getElementById(labelID);
-    label.classList.toggle(className);
+const addDeleteClass = (labelID: string = '', className: string = '') => {
     handleRadioClick(className);
 }
 
